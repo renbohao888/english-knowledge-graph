@@ -1,0 +1,8 @@
+.git
+.github
+node_modules
+*.md
+preview.png
+data/*.db
+*.log
+data

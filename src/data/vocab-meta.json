@@ -1,0 +1,50 @@
+{
+  "source": "ECDICT",
+  "sourceUrl": "https://github.com/skywind3000/ECDICT",
+  "license": "MIT",
+  "totalWords": 770611,
+  "coreWords": 18363,
+  "tags": [
+    {
+      "key": "zk",
+      "label": "中考",
+      "count": 1603
+    },
+    {
+      "key": "gk",
+      "label": "高考",
+      "count": 3677
+    },
+    {
+      "key": "cet4",
+      "label": "四级",
+      "count": 3849
+    },
+    {
+      "key": "cet6",
+      "label": "六级",
+      "count": 5407
+    },
+    {
+      "key": "ky",
+      "label": "考研",
+      "count": 4801
+    },
+    {
+      "key": "toefl",
+      "label": "托福",
+      "count": 6974
+    },
+    {
+      "key": "ielts",
+      "label": "雅思",
+      "count": 5040
+    },
+    {
+      "key": "gre",
+      "label": "GRE",
+      "count": 7504
+    }
+  ],
+  "builtAt": "2026-11-17T12:55:05Z"
+}

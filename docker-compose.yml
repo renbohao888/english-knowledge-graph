@@ -1,0 +1,11 @@
+services:
+  knowledge-graph:
+    build: .
+    image: english-knowledge-graph:latest
+    container_name: english-knowledge-graph
+    ports:
+      - "8788:80"
+    volumes:
+      # 教程与 ecdict.db 放这里，重建镜像不会丢
+      - ./data:/data
+    restart: unless-stopped

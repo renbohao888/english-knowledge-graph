@@ -1,0 +1,173 @@
+/* ============================================================
+ * 词汇库：查词面板 + 生词本 + 复习卡片
+ * 单独成文件，避免和主视觉层混在一起
+ * ============================================================ */
+#vocabOverlay{
+  position:fixed;inset:0;z-index:10000;
+  display:none;align-items:center;justify-content:center;
+  padding:24px;
+}
+#vocabOverlay.open{display:flex}
+.vocab-backdrop{
+  position:absolute;inset:0;
+  background:rgba(3,6,12,.72);
+  backdrop-filter:blur(6px);
+}
+.vocab-card{
+  position:relative;z-index:1;
+  width:min(1080px,calc(100vw - 48px));
+  height:min(760px,calc(100vh - 48px));
+  display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(14,22,38,.98),rgba(8,13,24,.98));
+  border:1px solid var(--stroke-2);
+  border-radius:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.04);
+  overflow:hidden;
+  animation:vocabIn .22s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes vocabIn{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+.vocab-head{
+  display:flex;align-items:center;gap:16px;
+  padding:14px 18px;border-bottom:1px solid var(--stroke);
+  background:rgba(10,16,29,.85);
+}
+.vocab-title{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vocab-title b{font-size:15px;letter-spacing:.02em;color:#eaf3ff}
+.vocab-title span{font-size:10.5px;color:#6f82a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vocab-tabs{display:flex;gap:4px;margin-left:6px;background:rgba(124,168,224,.08);border:1px solid var(--stroke);border-radius:10px;padding:3px}
+.vocab-tabs button{padding:6px 14px;border-radius:8px;font-size:12px;color:#9fb3cc}
+.vocab-tabs button.on{background:rgba(92,200,255,.16);color:#dff3ff;box-shadow:inset 0 0 0 1px rgba(92,200,255,.32)}
+.vocab-tabs em{
+  font-style:normal;margin-left:4px;font-size:10px;padding:1px 5px;border-radius:8px;
+  background:rgba(92,200,255,.16);color:#8fdcff;
+}
+.vocab-close{margin-left:auto;width:32px;height:32px;border-radius:9px;font-size:14px;color:#8ea2be}
+.vocab-close:hover{background:rgba(255,255,255,.07);color:#fff}
+.vocab-search{display:flex;gap:10px;padding:12px 18px 8px}
+.vocab-search input{
+  flex:1;min-width:0;height:40px;padding:0 14px;
+  background:rgba(9,14,25,.9);border:1px solid var(--stroke-2);border-radius:11px;
+  color:var(--text);font-size:13.5px;outline:none;
+}
+.vocab-search input:focus{border-color:rgba(92,200,255,.55);box-shadow:0 0 0 3px rgba(92,200,255,.08)}
+.vocab-tagchips{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 10px}
+.vchip{
+  font-size:11px;padding:4px 10px;border-radius:999px;
+  background:rgba(124,168,224,.08);border:1px solid var(--stroke);color:#9fb3cc;
+}
+.vchip em{font-style:normal;margin-left:5px;color:#627693;font-size:10px}
+.vchip:hover{border-color:var(--stroke-2);color:#cfdbee}
+.vchip.on{background:rgba(92,200,255,.14);border-color:rgba(92,200,255,.45);color:#dff3ff}
+.vocab-body{
+  flex:1;min-height:0;display:grid;grid-template-columns:340px minmax(0,1fr);
+  border-top:1px solid var(--stroke);
+}
+.vocab-list{
+  overflow:auto;padding:8px;border-right:1px solid var(--stroke);
+  background:rgba(7,11,20,.35);
+}
+.vrow{
+  display:flex;flex-direction:column;gap:3px;align-items:stretch;
+  width:100%;padding:9px 11px;border-radius:10px;text-align:left;
+  border:1px solid transparent;
+}
+.vrow:hover{background:rgba(124,168,224,.07);border-color:rgba(124,168,224,.12)}
+.vrow.on{background:rgba(92,200,255,.11);border-color:rgba(92,200,255,.35)}
+.vw{display:flex;align-items:baseline;gap:8px;min-width:0}
+.vw b{font-size:14px;color:#e8f1ff;font-weight:600;letter-spacing:.01em}
+.vphon{font-size:11px;color:#7f9dc0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vox{font-size:9px;color:#5ee6a0;border:1px solid rgba(61,220,132,.35);border-radius:5px;padding:0 4px}
+.vt{font-size:11.5px;color:#8fa3c0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vchips{display:flex;gap:4px;flex-wrap:wrap}
+.vtag{
+  font-size:9.5px;padding:1px 6px;border-radius:6px;
+  background:rgba(245,196,83,.1);color:#e8c579;border:1px solid rgba(245,196,83,.18);
+}
+.vocab-detail{overflow:auto;padding:20px 24px 28px}
+.vhead{
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:flex-start;
+  border-bottom:1px solid var(--stroke);padding-bottom:14px;margin-bottom:16px;
+}
+.vhead h2{display:flex;align-items:center;gap:10px;margin:0;font-size:26px;font-weight:650;letter-spacing:.01em;color:#f2f8ff}
+.vphon2{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:12.5px;color:#8fb0d8}
+.vspeak{font-size:16px;padding:2px 6px;border-radius:7px;color:#8fdcff}
+.vspeak:hover{background:rgba(92,200,255,.12)}
+.vmini{
+  font-size:10px;padding:1px 6px;border-radius:5px;color:#7f93ae;
+  border:1px solid var(--stroke);background:rgba(124,168,224,.06);
+}
+.vmini.on{color:#dff3ff;border-color:rgba(92,200,255,.45);background:rgba(92,200,255,.12)}
+.vbadges{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;max-width:58%}
+.vbadge{
+  font-size:10px;padding:2px 7px;border-radius:6px;
+  background:rgba(124,168,224,.1);color:#9fb3cc;border:1px solid var(--stroke);
+}
+.vbadge.ox{color:#5ee6a0;border-color:rgba(61,220,132,.32);background:rgba(61,220,132,.08)}
+.vsec{margin:0 0 18px}
+.vsec h4{margin:0 0 8px;font-size:11.5px;font-weight:600;letter-spacing:.06em;color:#7f93ae;text-transform:uppercase}
+.vsec h4 em{font-style:normal;font-size:10px;color:#5f7191;text-transform:none;letter-spacing:0;margin-left:8px}
+.vsec p{margin:0 0 6px;font-size:13.5px;line-height:1.85;color:#cfdbee;white-space:pre-wrap}
+.vdef{color:#9fb3cc !important;font-size:12.5px !important}
+.vdim{color:#627693 !important}
+.vx{display:flex;flex-wrap:wrap;gap:6px}
+.vx span{
+  font-size:12px;color:#cfdbee;padding:3px 9px;border-radius:7px;
+  background:rgba(124,168,224,.08);border:1px solid var(--stroke);
+}
+.vx em{font-style:normal;font-size:9.5px;color:#7f93ae;margin-right:6px}
+.vparts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.vpart{
+  display:inline-flex;align-items:baseline;gap:6px;
+  padding:5px 9px;border-radius:8px;font-size:12px;color:#cfdbee;
+  background:rgba(124,168,224,.08);border:1px solid var(--stroke);
+}
+.vpart b{color:#8fdcff;font-size:13px}
+.vpart em{font-style:normal;font-size:9.5px;color:#6f82a0}
+.vpart.link{cursor:pointer;border-color:rgba(92,200,255,.28)}
+.vpart.link:hover{background:rgba(92,200,255,.13)}
+.vplus{color:#5f7191;font-size:12px}
+.vlinks{display:flex;flex-wrap:wrap;gap:6px}
+.vlinks a{
+  font-size:11.5px;color:#8fdcff;padding:4px 9px;border-radius:7px;
+  background:rgba(92,200,255,.07);border:1px solid rgba(92,200,255,.2);
+}
+.vlinks a:hover{background:rgba(92,200,255,.16)}
+.vactions{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.vbtn{
+  padding:8px 14px;border-radius:9px;font-size:12px;
+  background:rgba(92,200,255,.16);color:#dff3ff;border:1px solid rgba(92,200,255,.4);
+}
+.vbtn:hover{background:rgba(92,200,255,.26)}
+.vbtn.on{background:rgba(61,220,132,.14);border-color:rgba(61,220,132,.45);color:#9df0bf}
+.vbtn.ghost{background:rgba(124,168,224,.07);border-color:var(--stroke);color:#b7c8e2}
+.vbtn.ghost:hover{background:rgba(124,168,224,.14)}
+.vempty{padding:26px 18px;color:#6f82a0;font-size:12.5px;line-height:1.9;text-align:center}
+.vintro{text-align:left;max-width:520px;margin:20px auto;line-height:2}
+.vintro b{color:#cfdbee;font-size:14px}
+.vintro code{font-size:11.5px;padding:1px 5px;border-radius:4px;background:rgba(124,168,224,.14);color:#9fb3cc}
+.nbtools{display:flex;flex-wrap:wrap;gap:6px;padding:4px 6px 10px}
+.vreview{padding:20px 8px;text-align:center}
+.vrcount{font-size:11px;color:#6f82a0;letter-spacing:.08em}
+.vrword{font-size:34px;font-weight:650;color:#f2f8ff;margin:22px 0 6px;letter-spacing:.01em}
+.vrphon{font-size:13px;color:#8fb0d8;margin-bottom:26px}
+.vrtrans{
+  min-height:60px;font-size:14px;color:#9fb3cc;line-height:1.9;
+  padding:14px;border-radius:12px;background:rgba(124,168,224,.05);
+  border:1px dashed var(--stroke);margin-bottom:18px;
+}
+.vrtrans.show{color:#cfdbee;border-style:solid;border-color:rgba(92,200,255,.25);background:rgba(92,200,255,.06)}
+.vreview .vactions{justify-content:center}
+
+@media (max-width:900px){
+  #vocabOverlay{padding:10px}
+  .vocab-card{width:calc(100vw - 20px);height:calc(100vh - 20px)}
+  .vocab-body{grid-template-columns:1fr;grid-template-rows:minmax(120px,36%) minmax(0,1fr)}
+  .vocab-list{border-right:0;border-bottom:1px solid var(--stroke)}
+  .vbadges{max-width:none;justify-content:flex-start}
+  .vocab-head{flex-wrap:wrap;gap:8px}
+}
+
+/* 全局搜索里的「去词汇库查」入口 */
+.sr-kind-vocab{background:rgba(61,220,132,.12);color:#5ee6a0}
+.sr-vocab{border:1px dashed rgba(61,220,132,.25)}
+.sr-vocab:hover{background:rgba(61,220,132,.08)}

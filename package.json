@@ -1,0 +1,16 @@
+{
+  "name": "english-knowledge-graph",
+  "version": "1.0.0",
+  "private": true,
+  "description": "英语知识体系 3D 交互图谱：语音、词汇、语法、听说读写、考试、翻译、方法与文化 + 77 万词条词汇库",
+  "scripts": {
+    "serve": "node scripts/serve.mjs",
+    "validate": "node scripts/validate.mjs",
+    "db": "node scripts/build-db.mjs",
+    "vocab": "python scripts/build_vocab.py"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

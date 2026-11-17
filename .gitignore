@@ -1,0 +1,10 @@
+node_modules/
+data/*.db
+data/*.db-*
+data/content.json
+data/content.backup.json
+*.log
+.DS_Store
+Thumbs.db
+_*.png
+.playwright-mcp/
