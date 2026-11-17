@@ -4,7 +4,7 @@
 
 不是目录树，也不是课程表，而是一张可以转起来的英语知识地图：从语音、拼写、构词、词汇，一路到词性、时态、从句、篇章、听说读写、翻译、考试、学习方法与文化思维。每个点都能告诉你它在体系里的哪一层、属于哪些方向、学之前要先懂什么、学完之后能接上什么。
 
-**在线体验（GitHub Pages）**：公开仓库并开启 Pages 后为 <https://renbohao888.github.io/english-knowledge-graph/>（当前仓库为私有，尚未开启 Pages；静态版词汇库使用 1.8 万核心词，完整 77 万词条请用下面的本地 / Docker 服务）
+**在线体验（GitHub Pages）**：<https://renbohao888.github.io/english-knowledge-graph/>（静态版词汇库使用 1.8 万核心词；完整 77 万词条请用下面的本地 / Docker 服务）
 
 ![预览](docs/preview.png)
 

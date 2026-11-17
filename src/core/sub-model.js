@@ -180,6 +180,7 @@ window.KB = window.KB || {};
       .onBackgroundClick(() => {});
 
     KB.withSceneFade(() => {
+      if (KB._cancelFly) KB._cancelFly();
       g.graphData({ nodes, links });
       KB.renderSubPanel(id);
       KB.updateViewOffset();
@@ -202,6 +203,11 @@ window.KB = window.KB || {};
       KB._subOutHits = 0;
 
       g.cameraPosition({ x: 0, y: dist * 0.14, z: dist }, { x: 0, y: 0, z: 0 }, KB.reduceMotion ? 0 : 700);
+
+      /* 显式把轨道中心钉在原点：后续拖动/缩放都绕这个点转 */
+      const ctr = g.controls();
+      if (ctr) { ctr.target.set(0, 0, 0); ctr.update(); }
+      KB._lastAct = performance.now();
 
       KB.buildLabels(nodes, links);
     });

@@ -257,12 +257,11 @@ KB._lastAct = performance.now();
 KB.recenterOrbit = function () {
   const g = KB.graph;
   if (!g) return;
-  /* 内部模型允许自由穿行，不强制回中；总图拖动必须绕模型中心转 */
-  if (KB.state.subOf) return;
   const cam = g.camera();
   const c = g.controls();
   if (!cam || !c) return;
-  const center = KB._modelCenter || { x: 0, y: 0, z: 0 };
+  /* 节点内部 3D 的旋转中心固定在原点，拖动时不再跑偏 */
+  const center = KB.state.subOf ? { x: 0, y: 0, z: 0 } : (KB._modelCenter || { x: 0, y: 0, z: 0 });
   const t = c.target;
   const dist = Math.hypot(cam.position.x - center.x, cam.position.y - center.y, cam.position.z - center.z);
   if (dist < 2) return;
@@ -280,12 +279,14 @@ KB.autoOrbitTick = function () {
   const dt = Math.min(0.05, Math.max(0, (now - (KB._autoLast || now)) / 1000));
   KB._autoLast = now;
   if (!KB.graph || KB.state.mode !== '3d') return;
+  /* 节点内部 3D 不自动转：中心固定，用户拖哪里就停在哪里 */
+  if (KB.state.subOf) return;
   if (KB._orbiting || KB._flying || KB._wheelEasing) return;
   if (now - (KB._lastAct || 0) < 3200) return;
   const cam = KB.graph.camera();
   const c = KB.graph.controls();
   if (!cam || !c) return;
-  const center = KB.state.subOf ? { x: 0, y: 0, z: 0 } : (KB._modelCenter || { x: 0, y: 0, z: 0 });
+  const center = KB._modelCenter || { x: 0, y: 0, z: 0 };
   if (Math.hypot(c.target.x - center.x, c.target.y - center.y, c.target.z - center.z) > 6) return;
   const dx = cam.position.x - center.x, dz = cam.position.z - center.z;
   const r = Math.hypot(dx, dz);
@@ -496,8 +497,13 @@ KB.installWheelControl = function (g) {
     const mag = magOf(e.deltaY);
 
     if (e.deltaY < 0) {
-      /* 向前：还远就先缩小视距，贴近后改为前移 */
-      if (!flying && r > STOP_DIST + 1) {
+      /* 节点内部 3D：只缩放、不穿行，保证旋转中心始终固定在原点 */
+      if (KB.state.subOf) {
+        const r2 = Math.max(STOP_DIST, r * Math.exp(-mag * 0.42));
+        want.pos.addScaledVector(dir, r - r2);
+        want.target.set(0, 0, 0);
+      } else if (!flying && r > STOP_DIST + 1) {
+        /* 向前：还远就先缩小视距，贴近后改为前移 */
         const r2 = Math.max(STOP_DIST, r * Math.exp(-mag * 0.42));
         want.pos.addScaledVector(dir, r - r2);
       } else {
@@ -527,7 +533,7 @@ KB.installWheelControl = function (g) {
       }
     } else {
       /* 向后：穿行阶段就沿原路后退；退到模型边界掉头，之后恢复常规缩放 */
-      if (flying) {
+      if (flying && !KB.state.subOf) {
         const step = stepOf(r, mag);
         const next = want.pos.clone().addScaledVector(dir, -step);
         const limit = (KB._cloudR || 900) + 100;
